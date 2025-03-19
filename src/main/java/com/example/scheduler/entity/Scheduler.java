@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 public class Scheduler {
     private Long id;
     private String password;
+    private String name;
     private String title;
     private String contents;
     private LocalDateTime time;
-    private LocalDateTime  editTime;
+//    private LocalDateTime  editTime;
 }
