@@ -3,10 +3,7 @@ package com.example.scheduler.controller;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -30,6 +27,13 @@ public class SchedulerController {
 
         // inmemory DB에 저장
         schedulerList.put(schedulerId, scheduler);
+
+        return new SchedulerResponseDto(scheduler);
+    }
+
+    @GetMapping("/{id}")
+    public SchedulerResponseDto findSchedulerById(@PathVariable Long id){
+        Scheduler scheduler = schedulerList.get(id);
 
         return new SchedulerResponseDto(scheduler);
     }
