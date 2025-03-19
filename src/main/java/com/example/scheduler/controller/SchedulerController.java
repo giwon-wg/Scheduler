@@ -3,6 +3,7 @@ package com.example.scheduler.controller;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class SchedulerController {
     //ID 기준으로 스케줄 검색
     @GetMapping("/{id}")
     public SchedulerResponseDto findSchedulerById(@PathVariable Long id){
+
         Scheduler scheduler = schedulerList.get(id);
 
         return new SchedulerResponseDto(scheduler);
@@ -43,22 +45,43 @@ public class SchedulerController {
 
     //ID 기준으로 스케줄 수정
     @PutMapping("/{id}")
-    public SchedulerResponseDto updateSchedulerById(
+    public  ResponseEntity<String> updateSchedulerById(
             @PathVariable Long id,
-            @RequestBody SchedulerRequestDto dto
+            @RequestBody SchedulerRequestDto requestDto
+    ){
+        // 수정할 스케줄 찾기
+        Scheduler scheduler = schedulerList.get(id);
+
+        //일정이 없을때
+        if(scheduler == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일정을 찾을 수 없습니다.");
+        }
+        //비밀번호가 틀릴때
+        if (!scheduler.getPassword().equals(requestDto.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+        }
+
+        scheduler.update(requestDto);
+        return ResponseEntity.ok("수정되었습니다.");
+    }
+
+    //스케줄 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteScheduler(
+            @PathVariable Long id,
+            @RequestBody SchedulerRequestDto requestdto
     ){
         Scheduler scheduler = schedulerList.get(id);
 
-        scheduler.update(dto);
-
-        return new SchedulerResponseDto(scheduler);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteScheduler(@PathVariable Long id){
-        //삭제 로직(id 기준)
+        //일정이 없을때
+        if(scheduler == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일정을 찾을 수 없습니다.");
+        }
+        //비밀번호가 틀릴때
+        if(!scheduler.getPassword().equals(requestdto.getPassword())){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀 번호가 틀립니다.");
+        }
         schedulerList.remove(id);
-
-        return ResponseEntity.ok("스케줄이 삭제되었습니다.");
+        return ResponseEntity.ok("스케줄이 삭제 되었습니다.");
     }
 }
