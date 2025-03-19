@@ -46,8 +46,9 @@ Response(응답)
 Request(요청)
 ```json
 {
-  "title": "수정 제목",
-  "contents": "수정 내용"
+  "password": "1234abc",
+  "title": "수정 제목ㅁㄴㅇ123",
+  "contents": "수정 내용ㅁㄴ123ㅇ"
 }
 ```
 
@@ -67,10 +68,16 @@ Response(응답)
 
 ### 게시글 삭제 API
 
+Request(요청)
+```json
+{
+  "password": "1234abc"
+}
+```
 Response(응답)
 ```json
 {
-    "Message": "삭제문구"
+  "Message": "삭제문구"
 }
 ```
 
