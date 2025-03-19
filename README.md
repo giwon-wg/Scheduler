@@ -21,7 +21,7 @@ Response(응답)
   "name": "이름",
   "title": "제목1",
   "contents": "내용1",
-  "time": "2025-03-19T18:20:02.3769366"
+  "time": "YYYY-MM-DDTHH:MM:SS"
 }
 ```
 ---
@@ -36,7 +36,7 @@ Response(응답)
   "name": "이름",
   "title": "제목1",
   "contents": "내용1",
-  "time": "2025-03-19T18:28:43.0722007"
+  "time": "YYYY-MM-DDTHH:MM:SS"
 }
 ```
 ---
@@ -46,25 +46,20 @@ Response(응답)
 Request(요청)
 ```json
 {
-    "Name": "이름",
-    "Password": "1234",
-    "Title": "수정 제목",
-    "Contents": "수정 내용",
-    "EditTime": "YYYY-MM-DDTHH:MM:SS",
-    "Edit": true
+  "title": "수정 제목",
+  "contents": "수정 내용"
 }
 ```
 
 Response(응답)
 ```json
 {
-    "Id": 1,
-    "Name": "이름",
-    "Password": "1234",
-    "Title": "제목",
-    "Contents": "내용",
-    "EditTime": "YYYY-MM-DDTHH:MM:SS",
-    "Edit": true
+  "id": 1,
+  "password": "1234abc",
+  "name": "giwon",
+  "title": "수정 제목ㅁㄴㅇ",
+  "contents": "수정 내용ㅁㄴㅇ",
+  "time": "YYYY-MM-DDTHH:MM:SS"
 }
 ```
 
@@ -72,14 +67,6 @@ Response(응답)
 
 ### 게시글 삭제 API
 
-Request(요청)
-```json
-{
-    "Id": 1,
-    "Password": "1234",
-    "Del": true
-}
-```
 Response(응답)
 ```json
 {

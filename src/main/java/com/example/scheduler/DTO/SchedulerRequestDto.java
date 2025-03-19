@@ -2,6 +2,8 @@ package com.example.scheduler.DTO;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class SchedulerRequestDto {
     private String password;
