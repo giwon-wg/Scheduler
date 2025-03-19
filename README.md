@@ -31,15 +31,12 @@ Response(응답)
 Response(응답)
 ```json
 {
-    "Id": 1,
-    "Name": "이름",
-    "Password": "1234",
-    "Title": "제목",
-    "Contents": "내용",
-    "Time": "YYYY-MM-DDTHH:MM:SS",
-    "EditTime": null,
-    "Del": false,
-    "Edit": false
+  "id": 1,
+  "password": "1234abc",
+  "name": "이름",
+  "title": "제목1",
+  "contents": "내용1",
+  "time": "2025-03-19T18:28:43.0722007"
 }
 ```
 ---
