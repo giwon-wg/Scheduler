@@ -1,5 +1,19 @@
 package com.example.scheduler.entity;
 
-public class Scheduler {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Scheduler {
+    private Long id;
+    private String password;
+    private String title;
+    private String contents;
+    private LocalDateTime time;
+    private LocalDateTime  editTime;
 }
