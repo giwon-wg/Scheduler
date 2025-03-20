@@ -5,6 +5,7 @@ import com.example.scheduler.DTO.SchedulerResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -12,17 +13,30 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Scheduler {
+
+    @Setter
     private Long id;
+
     private String password;
     private String name;
     private String title;
     private String contents;
     private LocalDateTime time;
 
-    //스케줄 수정
-    public void update(SchedulerRequestDto dto){
-        this.title = dto.getTitle();
-        this.contents = dto.getContents();
+    //스케줄러 값 받기
+    public Scheduler(String password, String name, String title, String contents){
+        this.password = password;
+        this.name = name;
+        this.title = title;
+        this.contents = contents;
         this.time = LocalDateTime.now();
     }
+
+    //스케줄 수정
+    public void update(String title, String contents){
+        this.title = title;
+        this.contents = contents;
+        this.time = LocalDateTime.now();
+    }
+
 }

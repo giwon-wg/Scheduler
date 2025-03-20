@@ -18,10 +18,18 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot Starter
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Lombok 설정 (컴파일 시 자동 적용)
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // MySQL JDBC 드라이버 (MySQL과 연동)
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Spring Boot Test (JUnit 포함)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

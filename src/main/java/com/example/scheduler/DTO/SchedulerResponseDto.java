@@ -2,10 +2,12 @@ package com.example.scheduler.DTO;
 
 import com.example.scheduler.entity.Scheduler;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 public class SchedulerResponseDto {
     private Long id;
     private String password;
@@ -13,7 +15,7 @@ public class SchedulerResponseDto {
     private String title;
     private String contents;
     private LocalDateTime time;
-//    private LocalDateTime editTime;
+
 
     public SchedulerResponseDto(Scheduler scheduler){
         this.id = scheduler.getId();
