@@ -6,7 +6,7 @@
 Request(요청)
 ```json
 {
-  "password": "1234abc",
+  "password": "1234",
   "name": "이름",
   "title": "제목1",
   "contents": "내용1"
@@ -17,27 +17,52 @@ Response(응답)
 ```json
 {
   "id": 1,
-  "password": "1234abc",
+  "password": "1234",
   "name": "이름",
   "title": "제목1",
   "contents": "내용1",
-  "time": "YYYY-MM-DDTHH:MM:SS"
+  "time": "2025-03-21T13:17:44.5047075"
 }
 ```
 ---
 
-### 게시글 조회 API
+### 게시글 단건 조회 API
 
 Response(응답)
 ```json
 {
-  "id": 1,
-  "password": "1234abc",
+  "id": 6,
+  "password": "1234",
   "name": "이름",
   "title": "제목1",
   "contents": "내용1",
-  "time": "YYYY-MM-DDTHH:MM:SS"
+  "time": "2025-03-21T13:17:45"
 }
+```
+
+### 게시글 전체 조회 API
+
+Response(응답)
+```json
+[
+  {
+    "id": 1,
+    "password": "1234",
+    "name": "이름",
+    "title": "제목1",
+    "contents": "내용1",
+    "time": "2025-03-21T13:17:45"
+  },
+  
+  {
+    "id": 2,
+    "password": "1234",
+    "name": "이름",
+    "title": "제목2",
+    "contents": "내용2",
+    "time": "2025-03-21T13:17:45"
+  }
+]
 ```
 ---
 
@@ -46,9 +71,9 @@ Response(응답)
 Request(요청)
 ```json
 {
-  "password": "1234abc",
-  "title": "수정 제목ㅁㄴㅇ123",
-  "contents": "수정 내용ㅁㄴ123ㅇ"
+  "password": "1234",
+  "title": "수정 제목1",
+  "contents": "수정 내용1"
 }
 ```
 
@@ -56,11 +81,11 @@ Response(응답)
 ```json
 {
   "id": 1,
-  "password": "1234abc",
-  "name": "giwon",
-  "title": "수정 제목ㅁㄴㅇ",
-  "contents": "수정 내용ㅁㄴㅇ",
-  "time": "YYYY-MM-DDTHH:MM:SS"
+  "password": "1234",
+  "name": "이름",
+  "title": "수정 제목1",
+  "contents": "수정 내용1",
+  "time": "2025-03-21T13:19:36"
 }
 ```
 
@@ -71,13 +96,7 @@ Response(응답)
 Request(요청)
 ```json
 {
-  "password": "1234abc"
-}
-```
-Response(응답)
-```json
-{
-  "Message": "삭제문구"
+  "password": "1234"
 }
 ```
 

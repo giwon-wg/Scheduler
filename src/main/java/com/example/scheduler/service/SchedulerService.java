@@ -3,7 +3,6 @@ package com.example.scheduler.service;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SchedulerService {
