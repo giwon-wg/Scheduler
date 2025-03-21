@@ -32,6 +32,11 @@ dependencies {
     // Spring Boot Test (JUnit 포함)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // MySQL
+    implementation 'mysql:mysql-connector-java:8.0.28'
+    // JDBC Template
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 }
 
 tasks.named('test') {

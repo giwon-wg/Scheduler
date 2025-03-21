@@ -18,8 +18,11 @@ public interface SchedulerService {
     SchedulerResponseDto findSchedulerById(Long id);
 
     //스케줄러 업데이트
-    SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password, LocalDateTime time);
+    SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password);
 
     //스케줄러 삭제(ID기반)
     void deleteScheduler(Long id, String password);
+
+    //비밀번호 인증 로직
+    void checkingPassword(Long id, String password);
 }

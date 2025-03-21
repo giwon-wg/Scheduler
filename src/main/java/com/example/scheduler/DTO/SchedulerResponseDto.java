@@ -1,6 +1,7 @@
 package com.example.scheduler.DTO;
 
 import com.example.scheduler.entity.Scheduler;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class SchedulerResponseDto {
     private Long id;
     private String password;

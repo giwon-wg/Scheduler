@@ -4,18 +4,23 @@ import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SchedulerRepository {
 
     //스케줄러 저장
-    Scheduler saveScheduler(Scheduler scheduler);
+    SchedulerResponseDto saveScheduler(Scheduler scheduler);
 
     //스케줄러 전건 조회
     List<SchedulerResponseDto> findAllScheduler();
 
     //스케줄러 단건 조회
-    Scheduler findSchedulerById(Long id);
+    Optional<Scheduler> findSchedulerById(Long id);
+
+    Scheduler findSchedulerByIdOrElseThrow(Long id);
+
+    int updateScheduler(Long id, String title, String contents);
 
     //스케줄러 삭제
-    void deleteScheduler(Long id);
+    int deleteScheduler(Long id);
 }

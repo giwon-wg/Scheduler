@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,9 +31,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         Scheduler scheduler = new Scheduler(dto.getPassword(), dto.getName(), dto.getTitle(), dto.getContents());
 
         //DB 저장
-        Scheduler savedScheduler = schedulerRepository.saveScheduler(scheduler);
-
-        return new SchedulerResponseDto(savedScheduler);
+        return schedulerRepository.saveScheduler(scheduler);
     }
 
     //스케줄러 전건 조회
@@ -45,34 +45,29 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Override
     public SchedulerResponseDto findSchedulerById(Long id) {
 
-        Scheduler scheduler = schedulerRepository.findSchedulerById(id);
-
-        if(scheduler == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다" + id);
-        }
+        Scheduler scheduler = schedulerRepository.findSchedulerByIdOrElseThrow(id);
 
         return new SchedulerResponseDto(scheduler);
     }
 
     //스케줄러 업데이트(ID기반)
+    @Transient
     @Override
-    public SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password, LocalDateTime time) {
-
-        Scheduler scheduler = schedulerRepository.findSchedulerById(id);
-
-        if(scheduler == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다" + id);
-        }
+    public SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password) {
 
         if (title == null || contents == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타이틀과 컨텐츠의 값이 없습니다.");
         }
 
-        if(!scheduler.getPassword().equals(password)){
-            throw  new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀립니다.");
+        checkingPassword(id, password);
+
+        int updatedRow = schedulerRepository.updateScheduler(id, title, contents);
+
+        if(updatedRow == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다" + id);
         }
 
-        scheduler.update(title, contents);
+        Scheduler scheduler = schedulerRepository.findSchedulerByIdOrElseThrow(id);
 
         return new SchedulerResponseDto(scheduler);
     }
@@ -80,17 +75,25 @@ public class SchedulerServiceImpl implements SchedulerService {
     //스케줄러 삭제(ID기반)
     @Override
     public void deleteScheduler(Long id, String password) {
-        Scheduler scheduler = schedulerRepository.findSchedulerById(id);
 
-        if(scheduler == null){
+        checkingPassword(id, password);
+
+        int deletedRow = schedulerRepository.deleteScheduler(id);
+
+        if(deletedRow == 0){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다" + id);
         }
+
+    }
+
+    //비밀번호 인증 로직
+    @Override
+    public void checkingPassword(Long id, String password) {
+        Scheduler scheduler = schedulerRepository.findSchedulerById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다: " + id));
+
         if(!scheduler.getPassword().equals(password)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀립니다.");
         }
-
-        schedulerRepository.deleteScheduler(id);
-
     }
 
 }

@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Scheduler {
 
-    @Setter
-    private Long id;
 
+    private Long id;
     private String password;
     private String name;
     private String title;

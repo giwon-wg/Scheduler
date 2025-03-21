@@ -50,7 +50,7 @@ public class SchedulerController {
             @RequestBody SchedulerResponseDto dto
     ){
 
-        return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword(), dto.getTime()), HttpStatus.OK);
+        return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword()), HttpStatus.OK);
     }
 
     //스케줄러 삭제(ID기반)
