@@ -25,5 +25,6 @@ public interface SchedulerRepository {
     //스케줄러 삭제
     int deleteScheduler(Long id);
 
-    List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date);
+    List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to);
+
 }

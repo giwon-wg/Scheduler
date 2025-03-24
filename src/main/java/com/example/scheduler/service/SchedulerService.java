@@ -26,5 +26,5 @@ public interface SchedulerService {
     //비밀번호 인증 로직
     void checkingPassword(Long id, String password);
 
-    List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date);
+    List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months);
 }

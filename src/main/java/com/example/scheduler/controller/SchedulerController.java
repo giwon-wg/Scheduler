@@ -38,12 +38,23 @@ public class SchedulerController {
         return schedulerService.findAllScheduler();
     }
 
+    //스케줄러 조건부 조회
+    @GetMapping("/search")
+    public List<SchedulerResponseDto> searchSchedules(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) Integer months
+    ){
+        return schedulerService.searchSchedules(name, date, months);
+    }
+
     //스케줄러 단건 조회(ID)
     @GetMapping("/{id}")
     public ResponseEntity<SchedulerResponseDto> findSchedulerById(@PathVariable Long id){
 
         return new ResponseEntity<>(schedulerService.findSchedulerById(id), HttpStatus.OK);
     }
+
 
     //스케줄러 업데이트(ID기반)
     @PutMapping("/{id}")
@@ -52,15 +63,6 @@ public class SchedulerController {
             @RequestBody SchedulerRequestDto dto
     ){
         return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword()), HttpStatus.OK);
-    }
-
-    //스케줄러 조건부 조회
-    @PutMapping("/filter")
-    public List<SchedulerResponseDto> findAllSchedulerWithFilter(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
-            ){
-        return schedulerService.findAllSchedulerWithFilter(name,date);
     }
 
     //스케줄러 삭제(ID기반)

@@ -53,7 +53,22 @@ URL: GET /schedules/{id}
 ---
 
 ### 작성 날짜 및 이름 기반 조회 API
-URL: GET schedules?name=이름1&date=2025-03-24
+
+URL: GET schedules/search?name=이름1&date=2025-03-01
+
+- 이름 + 수정일 
+
+URL: GET schedules/search?name=이름1&months=6
+
+- 이름 + 최근 X개월
+
+URL: GET schedules/search?months=6
+
+- 최근 X개월
+
+URL: GET /schedules/search?name=이름1
+
+- 이름
 
 설명: 이름 및 작성 날짜를 기반으로 일정 조회
 

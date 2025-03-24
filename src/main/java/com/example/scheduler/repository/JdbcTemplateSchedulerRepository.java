@@ -88,18 +88,19 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
     }
 
     @Override
-    public List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date) {
+    public List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to) {
         StringBuilder sql = new StringBuilder("SELECT * FROM schedules WHERE 1 = 1");
         List<Object> params = new ArrayList<>();
 
         if(name != null && !name.isEmpty()){
-            sql.append("AND name = ?");
+            sql.append(" AND name = ?");
             params.add(name);
         }
 
-        if(date != null){
-            sql.append("AND DATE(created_at) = ? ");
-            params.add(java.sql.Date.valueOf(date));
+        if(from != null && to != null){
+            sql.append(" AND DATE(created_at) BETWEEN ? AND ? ");
+            params.add(java.sql.Date.valueOf(from));
+            params.add(java.sql.Date.valueOf(to));
         }
 
         sql.append("ORDER BY created_at DESC");

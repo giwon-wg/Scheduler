@@ -96,8 +96,17 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
 
     @Override
-    public List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date) {
-        return schedulerRepository.findAllSchedulerWithFilter(name, date);
+    public List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months) {
+        LocalDate from = null;
+        LocalDate to = LocalDate.now();
+
+        if(months != null){
+            from = to.minusMonths(months);
+        } else if (date != null){
+            from = date;
+        }
+
+        return schedulerRepository.searchByConditions(name, from, to);
     }
 
 }
