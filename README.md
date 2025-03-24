@@ -52,6 +52,26 @@ URL: GET /schedules/{id}
 ```
 ---
 
+### 작성 날짜 및 이름 기반 조회 API
+URL: GET schedules?name=이름1&date=2025-03-24
+
+설명: 이름 및 작성 날짜를 기반으로 일정 조회
+
+- Response
+```json
+{
+  "id": 1,
+  "title": "제목1",
+  "contents": "내용1",
+  "startTime": "2025-03-26T10:00:00",
+  "endTime": "2025-03-26T12:00:00",
+  "createdAt": "2025-03-24T15:26:21",
+  "name": "이름1"
+}
+```
+
+---
+
 ### 일정 전체 조회 API
 URL: GET /schedules
 

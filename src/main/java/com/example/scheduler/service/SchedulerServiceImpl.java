@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.beans.Transient;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -92,6 +93,11 @@ public class SchedulerServiceImpl implements SchedulerService {
         if(!scheduler.getPassword().equals(password)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀립니다.");
         }
+    }
+
+    @Override
+    public List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date) {
+        return schedulerRepository.findAllSchedulerWithFilter(name, date);
     }
 
 }

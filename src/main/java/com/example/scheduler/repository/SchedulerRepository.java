@@ -3,6 +3,7 @@ package com.example.scheduler.repository;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,6 @@ public interface SchedulerRepository {
 
     //스케줄러 삭제
     int deleteScheduler(Long id);
+
+    List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date);
 }

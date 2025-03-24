@@ -3,10 +3,13 @@ package com.example.scheduler.controller;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.service.SchedulerService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController //@Controller + @ResponseBody
@@ -49,6 +52,15 @@ public class SchedulerController {
             @RequestBody SchedulerRequestDto dto
     ){
         return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword()), HttpStatus.OK);
+    }
+
+    //스케줄러 조건부 조회
+    @PutMapping("/filter")
+    public List<SchedulerResponseDto> findAllSchedulerWithFilter(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            ){
+        return schedulerService.findAllSchedulerWithFilter(name,date);
     }
 
     //스케줄러 삭제(ID기반)

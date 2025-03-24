@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Repository
@@ -84,6 +85,26 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
     public int deleteScheduler(Long id) {
         String sql = "DELETE FROM schedules WHERE id = ?";
         return jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public List<SchedulerResponseDto> findAllSchedulerWithFilter(String name, LocalDate date) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM schedules WHERE 1 = 1");
+        List<Object> params = new ArrayList<>();
+
+        if(name != null && !name.isEmpty()){
+            sql.append("AND name = ?");
+            params.add(name);
+        }
+
+        if(date != null){
+            sql.append("AND DATE(created_at) = ? ");
+            params.add(java.sql.Date.valueOf(date));
+        }
+
+        sql.append("ORDER BY created_at DESC");
+
+        return jdbcTemplate.query(sql.toString(), params.toArray(), (rs, rowNum) -> mapToResponseDto(rs));
     }
 
     // Response DTO 매핑
