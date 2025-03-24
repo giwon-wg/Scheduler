@@ -20,9 +20,10 @@ public class Scheduler {
     private LocalDateTime createdAt;
     private String password;
     private String name;
+    private Long userId;
 
     //일정 생성용 생성자
-    public Scheduler(String title, String contents, LocalDateTime startTime, LocalDateTime endTime, String password, String name){
+    public Scheduler(String title, String contents, LocalDateTime startTime, LocalDateTime endTime, String password, String name, Long userId){
         this.title = title;
         this.contents = contents;
         this.startTime = startTime;
@@ -30,6 +31,7 @@ public class Scheduler {
         this.createdAt = LocalDateTime.now();
         this.password = password;
         this.name = name;
+        this.userId = userId;
     }
 
     //스케줄 수정

@@ -3,32 +3,39 @@ package com.example.scheduler.service;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
+import com.example.scheduler.entity.User;
 import com.example.scheduler.repository.SchedulerRepository;
+import com.example.scheduler.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Optional;
 
 
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
     private final SchedulerRepository schedulerRepository;
+    private final UserRepository userRepository;
 
-    public SchedulerServiceImpl(SchedulerRepository schedulerRepository) {
+    public SchedulerServiceImpl(SchedulerRepository schedulerRepository, UserRepository userRepository) {
         this.schedulerRepository = schedulerRepository;
+        this.userRepository = userRepository;
     }
 
     //스케줄러 저장
     @Override
     public SchedulerResponseDto saveScheduler(SchedulerRequestDto dto) {
 
+        Optional<User> user = userRepository.findById(dto.getUserId());
+        if (user.isEmpty()){
+            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저 ID 입니다.");
+        }
+
         //요청받은 데이터로 Scheduler 객체 생성, ID 없음
-        Scheduler scheduler = new Scheduler(dto.getTitle(), dto.getContents(), dto.getStartTime(), dto.getEndTime(), dto.getPassword(),dto.getName());
+        Scheduler scheduler = new Scheduler(dto.getTitle(), dto.getContents(), dto.getStartTime(), dto.getEndTime(), dto.getPassword(),dto.getName(), dto.getUserId());
 
         //DB 저장
         return schedulerRepository.saveScheduler(scheduler);
@@ -108,5 +115,4 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         return schedulerRepository.searchByConditions(name, from, to);
     }
-
 }

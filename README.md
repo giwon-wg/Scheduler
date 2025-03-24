@@ -15,7 +15,8 @@ URL: POST /schedules
   "startTime": "2025-03-26T10:00:00",
   "endTime": "2025-03-26T12:00:00",
   "password": "1234",
-  "name": "이름1"
+  "name": "이름1",
+  "userId": 1
 }
 ```
 
@@ -167,6 +168,10 @@ URL: DELETE /schedules/{id}
 <br>
 <br>
 
+---
+
 ## **ERD**
+
+![scheduler.png](scheduler.png)
 
 ---

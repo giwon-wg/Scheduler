@@ -2,9 +2,9 @@ package com.example.scheduler.repository;
 
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
+import com.example.scheduler.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -25,6 +25,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+
     @Override
     public SchedulerResponseDto saveScheduler(Scheduler scheduler) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -39,7 +40,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
         parameters.put("created_at", scheduler.getCreatedAt());
         parameters.put("password", scheduler.getPassword());
         parameters.put("name", scheduler.getName());
-        parameters.put("user_id", 1); // 테스트용 하드 코딩
+        parameters.put("user_id", scheduler.getUserId());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
@@ -50,7 +51,8 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 scheduler.getStartTime(),
                 scheduler.getEndTime(),
                 scheduler.getCreatedAt(),
-                scheduler.getName()
+                scheduler.getName(),
+                scheduler.getUserId()
         );
     }
 
@@ -117,7 +119,8 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 rs.getTimestamp("start_time").toLocalDateTime(),
                 rs.getTimestamp("end_time").toLocalDateTime(),
                 rs.getTimestamp("created_at").toLocalDateTime(),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getLong("user_id")
         );
     }
 
@@ -131,7 +134,9 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 rs.getTimestamp("end_time").toLocalDateTime(),
                 rs.getTimestamp("created_at").toLocalDateTime(),
                 rs.getString("password"),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getLong("user_id")
         );
     }
+
 }

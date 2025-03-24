@@ -14,4 +14,5 @@ public class SchedulerRequestDto {
     private LocalDateTime endTime;
     private String password;
     private String name;
+    private Long userId;
 }
