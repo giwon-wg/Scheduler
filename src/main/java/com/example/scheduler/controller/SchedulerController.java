@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController //@Controller + @ResponseBody
-@RequestMapping("/scheduler") //Prefix
+@RequestMapping("/schedules") //Prefix
 public class SchedulerController {
 
     //주입된 의존성을 변경할 수 없어 객체의 상태를 안전하게 유지
@@ -24,7 +24,6 @@ public class SchedulerController {
     //스케줄러 저장
     @PostMapping
     public ResponseEntity<SchedulerResponseDto> createScheduler(@RequestBody SchedulerRequestDto dto) {
-
         // Service Loyer 호출
         return new ResponseEntity<>(schedulerService.saveScheduler(dto), HttpStatus.CREATED);
     }
@@ -47,17 +46,19 @@ public class SchedulerController {
     @PutMapping("/{id}")
     public ResponseEntity<SchedulerResponseDto> updateScheduler(
             @PathVariable Long id,
-            @RequestBody SchedulerResponseDto dto
+            @RequestBody SchedulerRequestDto dto
     ){
-
         return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword()), HttpStatus.OK);
     }
 
     //스케줄러 삭제(ID기반)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteScheduler(@PathVariable Long id, @RequestBody SchedulerRequestDto dto){
+    public ResponseEntity<Void> deleteScheduler(
+            @PathVariable Long id,
+            @RequestBody SchedulerRequestDto dto
+            ){
         schedulerService.deleteScheduler(id, dto.getPassword());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

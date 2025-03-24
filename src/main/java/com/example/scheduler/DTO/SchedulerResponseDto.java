@@ -12,19 +12,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SchedulerResponseDto {
     private Long id;
-    private String password;
-    private String name;
     private String title;
     private String contents;
-    private LocalDateTime time;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDateTime createdAt;
+    private String name;
 
 
     public SchedulerResponseDto(Scheduler scheduler){
         this.id = scheduler.getId();
-        this.password = scheduler.getPassword();
-        this.name = scheduler.getName();
         this.title = scheduler.getTitle();
         this.contents = scheduler.getContents();
-        this.time = scheduler.getTime();
+        this.startTime = scheduler.getStartTime();
+        this.endTime = scheduler.getEndTime();
+        this.createdAt = scheduler.getCreatedAt();
+        this.name = scheduler.getName();
     }
 }

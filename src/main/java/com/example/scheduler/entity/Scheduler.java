@@ -11,28 +11,32 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Scheduler {
 
-
     private Long id;
-    private String password;
-    private String name;
+
     private String title;
     private String contents;
-    private LocalDateTime time;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDateTime createdAt;
+    private String password;
+    private String name;
 
-    //스케줄러 값 받기
-    public Scheduler(String password, String name, String title, String contents){
-        this.password = password;
-        this.name = name;
+    //일정 생성용 생성자
+    public Scheduler(String title, String contents, LocalDateTime startTime, LocalDateTime endTime, String password, String name){
         this.title = title;
         this.contents = contents;
-        this.time = LocalDateTime.now();
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.createdAt = LocalDateTime.now();
+        this.password = password;
+        this.name = name;
     }
 
     //스케줄 수정
     public void update(String title, String contents){
         this.title = title;
         this.contents = contents;
-        this.time = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
 }

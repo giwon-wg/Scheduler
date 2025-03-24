@@ -27,7 +27,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     public SchedulerResponseDto saveScheduler(SchedulerRequestDto dto) {
 
         //요청받은 데이터로 Scheduler 객체 생성, ID 없음
-        Scheduler scheduler = new Scheduler(dto.getPassword(), dto.getName(), dto.getTitle(), dto.getContents());
+        Scheduler scheduler = new Scheduler(dto.getTitle(), dto.getContents(), dto.getStartTime(), dto.getEndTime(), dto.getPassword(),dto.getName());
 
         //DB 저장
         return schedulerRepository.saveScheduler(scheduler);
@@ -50,7 +50,6 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
 
     //스케줄러 업데이트(ID기반)
-    @Transient
     @Override
     public SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password) {
 

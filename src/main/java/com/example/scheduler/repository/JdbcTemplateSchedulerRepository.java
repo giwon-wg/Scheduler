@@ -13,13 +13,10 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
-public class JdbcTemplateSchedulerRepository implements SchedulerRepository{
+public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,84 +26,90 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository{
 
     @Override
     public SchedulerResponseDto saveScheduler(Scheduler scheduler) {
-
-        //INSERT Query 직접 작성하지 않아도 됨
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("schedule").usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("schedules") // ✅ 테이블명 수정
+                .usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("password", scheduler.getPassword());
-        parameters.put("name", scheduler.getName());
         parameters.put("title", scheduler.getTitle());
         parameters.put("contents", scheduler.getContents());
-        parameters.put("time", scheduler.getTime());
+        parameters.put("start_time", scheduler.getStartTime());
+        parameters.put("end_time", scheduler.getEndTime());
+        parameters.put("created_at", scheduler.getCreatedAt());
+        parameters.put("password", scheduler.getPassword());
+        parameters.put("name", scheduler.getName());
+        parameters.put("user_id", 1); // 테스트용 하드 코딩
 
-        //저장 후 생성된 key값을 Number 타입으로 반환
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
-        return new SchedulerResponseDto(key.longValue(), scheduler.getPassword(), scheduler.getName(), scheduler.getTitle(), scheduler.getContents(), scheduler.getTime());
+        return new SchedulerResponseDto(
+                key.longValue(),
+                scheduler.getTitle(),
+                scheduler.getContents(),
+                scheduler.getStartTime(),
+                scheduler.getEndTime(),
+                scheduler.getCreatedAt(),
+                scheduler.getName()
+        );
     }
 
     @Override
     public List<SchedulerResponseDto> findAllScheduler() {
-        return jdbcTemplate.query("select * from schedule", schedulerRowMapper());
+        String sql = "SELECT * FROM schedules ORDER BY created_at DESC";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToResponseDto(rs));
     }
 
     @Override
     public Optional<Scheduler> findSchedulerById(Long id) {
-        List<Scheduler> result = jdbcTemplate.query("select * from schedule where id = ?", schedulerRowMapperV2(), id);
+        String sql = "SELECT * FROM schedules WHERE id = ?";
+        List<Scheduler> result = jdbcTemplate.query(sql, (rs, rowNum) -> mapToScheduler(rs), id);
         return result.stream().findAny();
     }
 
     @Override
     public Scheduler findSchedulerByIdOrElseThrow(Long id) {
-        List<Scheduler> result = jdbcTemplate.query("select * from schedule where id = ?", schedulerRowMapperV2(), id);
-        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다"));
+        String sql = "SELECT * FROM schedules WHERE id = ?";
+        List<Scheduler> result = jdbcTemplate.query(sql, (rs, rowNum) -> mapToScheduler(rs), id);
+        return result.stream().findAny()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다"));
     }
 
     @Override
     public int updateScheduler(Long id, String title, String contents) {
-
-        return jdbcTemplate.update("update Schedule set title = ?, contents = ? where id = ?", title, contents, id);
+        String sql = "UPDATE schedules SET title = ?, contents = ?, created_at = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, title, contents, new Date(), id);
     }
 
     @Override
     public int deleteScheduler(Long id) {
-        return jdbcTemplate.update("delete from Schedule where id = ?", id);
-
+        String sql = "DELETE FROM schedules WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
-    private RowMapper<SchedulerResponseDto> schedulerRowMapper(){
-
-        return new RowMapper<SchedulerResponseDto>() {
-            @Override
-            public SchedulerResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new SchedulerResponseDto(
-                        rs.getLong("id"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getString("title"),
-                        rs.getString("contents"),
-                        rs.getTimestamp("time").toLocalDateTime()
-                );
-            }
-        };
+    // Response DTO 매핑
+    private SchedulerResponseDto mapToResponseDto(ResultSet rs) throws SQLException {
+        return new SchedulerResponseDto(
+                rs.getLong("id"),
+                rs.getString("title"),
+                rs.getString("contents"),
+                rs.getTimestamp("start_time").toLocalDateTime(),
+                rs.getTimestamp("end_time").toLocalDateTime(),
+                rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getString("name")
+        );
     }
 
-    private RowMapper<Scheduler> schedulerRowMapperV2(){
-        return new RowMapper<Scheduler>() {
-            @Override
-            public Scheduler mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Scheduler(
-                        rs.getLong("id"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getString("title"),
-                        rs.getString("contents"),
-                        rs.getTimestamp("time").toLocalDateTime()
-                );
-            }
-        };
+    // Entity 매핑
+    private Scheduler mapToScheduler(ResultSet rs) throws SQLException {
+        return new Scheduler(
+                rs.getLong("id"),
+                rs.getString("title"),
+                rs.getString("contents"),
+                rs.getTimestamp("start_time").toLocalDateTime(),
+                rs.getTimestamp("end_time").toLocalDateTime(),
+                rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getString("password"),
+                rs.getString("name")
+        );
     }
-
 }
