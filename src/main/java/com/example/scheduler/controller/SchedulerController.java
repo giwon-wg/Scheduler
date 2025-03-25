@@ -1,8 +1,10 @@
 package com.example.scheduler.controller;
 
+import com.example.scheduler.DTO.PasswordRequestDto;
 import com.example.scheduler.DTO.SchedulerRequestDto;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.service.SchedulerService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,11 @@ public class SchedulerController {
 
     //스케줄러 저장
     @PostMapping
-    public ResponseEntity<SchedulerResponseDto> createScheduler(@RequestBody SchedulerRequestDto dto) {
+    public ResponseEntity<SchedulerResponseDto> createScheduler(@RequestBody @Valid SchedulerRequestDto dto) {
+        if(dto.getUserId() == null){
+            throw new IllegalArgumentException("User ID는 필수값입니다.");
+        }
+
         // Service Loyer 호출
         return new ResponseEntity<>(schedulerService.saveScheduler(dto), HttpStatus.CREATED);
     }
@@ -43,9 +49,10 @@ public class SchedulerController {
     public List<SchedulerResponseDto> searchSchedules(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            @RequestParam(required = false) Integer months
+            @RequestParam(required = false) Integer months,
+            @RequestParam(required = false) Long userId
     ){
-        return schedulerService.searchSchedules(name, date, months);
+        return schedulerService.searchSchedules(name, date, months, userId);
     }
 
     //스케줄러 단건 조회(ID)
@@ -60,19 +67,27 @@ public class SchedulerController {
     @PutMapping("/{id}")
     public ResponseEntity<SchedulerResponseDto> updateScheduler(
             @PathVariable Long id,
-            @RequestBody SchedulerRequestDto dto
+            @RequestBody @Valid SchedulerRequestDto dto
     ){
-        return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getPassword()), HttpStatus.OK);
+        return new ResponseEntity<>(schedulerService.updateScheduler(id, dto.getTitle(), dto.getContents(), dto.getName(),dto.getPassword()), HttpStatus.OK);
     }
 
     //스케줄러 삭제(ID기반)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteScheduler(
             @PathVariable Long id,
-            @RequestBody SchedulerRequestDto dto
+            @RequestBody @Valid PasswordRequestDto dto
             ){
         schedulerService.deleteScheduler(id, dto.getPassword());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/paging")
+    public List<SchedulerResponseDto> getPaginationSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ){
+        return schedulerService.getPaginationSchedules(page, size);
     }
 }

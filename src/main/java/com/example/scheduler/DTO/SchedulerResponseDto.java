@@ -17,6 +17,7 @@ public class SchedulerResponseDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
     private String name;
     private Long userId;
 
@@ -28,6 +29,7 @@ public class SchedulerResponseDto {
         this.startTime = scheduler.getStartTime();
         this.endTime = scheduler.getEndTime();
         this.createdAt = scheduler.getCreatedAt();
+        this.updateAt = scheduler.getUpdateAt();
         this.name = scheduler.getName();
         this.userId = scheduler.getUserId();
     }

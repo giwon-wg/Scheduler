@@ -20,11 +20,13 @@ public interface SchedulerRepository {
 
     Scheduler findSchedulerByIdOrElseThrow(Long id);
 
-    int updateScheduler(Long id, String title, String contents);
+    int updateScheduler(Long id, String title, String contents, String name);
 
     //스케줄러 삭제
     int deleteScheduler(Long id);
 
-    List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to);
+    List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to, Long userId);
+
+    List<SchedulerResponseDto> findPaginationSchedules(int offset, int limit);
 
 }

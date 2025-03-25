@@ -165,6 +165,62 @@ URL: DELETE /schedules/{id}
     1. 비밀번호 불일치 -> `401 Unauthorized`
     2. ID가 존재하지 않음 -> `404 Not Found`
 
+---
+
+### 회원가입 API
+URL: POST /localhost:8080/users
+
+설명: 회원가입 API
+- Request Body
+```json
+{
+  "username": "이름1",
+  "password": "1234",
+  "email": "test1234@example.com"
+}
+```
+
+- Response
+```json
+{
+  "id": 1,
+  "username": "이름1",
+  "email": "test1234@example.com",
+  "createdAt": "2025-03-25T13:53:07"
+}
+```
+
+---
+
+### 페이지네이션
+URL: GET /localhost:8080/schedules/paging?page=0&size=2
+
+설명: 페이지네이션 기능
+
+- Response
+```json
+[
+  {
+    "id": 1,
+    "title": "제목1",
+    "contents": "내용1",
+    "startTime": "2025-03-26T10:00:00",
+    "endTime": "2025-03-26T12:00:00",
+    "createdAt": "2025-03-24T15:26:21",
+    "name": "이름1"
+  },
+  {
+    "id": 2,
+    "title": "제목2",
+    "contents": "내용2",
+    "startTime": "2025-03-27T09:00:00",
+    "endTime": "2025-03-27T11:00:00",
+    "createdAt": "2025-03-24T15:30:00",
+    "name": "이름2"
+  }
+]
+```
+
 <br>
 <br>
 

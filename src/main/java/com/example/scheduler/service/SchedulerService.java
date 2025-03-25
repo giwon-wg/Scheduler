@@ -18,7 +18,7 @@ public interface SchedulerService {
     SchedulerResponseDto findSchedulerById(Long id);
 
     //스케줄러 업데이트
-    SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password);
+    SchedulerResponseDto updateScheduler(Long id, String title, String contents, String name, String password);
 
     //스케줄러 삭제(ID기반)
     void deleteScheduler(Long id, String password);
@@ -26,5 +26,8 @@ public interface SchedulerService {
     //비밀번호 인증 로직
     void checkingPassword(Long id, String password);
 
-    List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months);
+    List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months, Long userId);
+
+    //페이지네이션
+    List<SchedulerResponseDto> getPaginationSchedules(int page, int size);
 }

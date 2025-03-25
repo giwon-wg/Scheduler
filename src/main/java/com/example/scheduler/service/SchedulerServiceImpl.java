@@ -1,9 +1,11 @@
 package com.example.scheduler.service;
 
 import com.example.scheduler.DTO.SchedulerRequestDto;
+import java.util.NoSuchElementException;
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
 import com.example.scheduler.entity.User;
+import com.example.scheduler.exception.PasswordException;
 import com.example.scheduler.repository.SchedulerRepository;
 import com.example.scheduler.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -59,7 +61,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     //스케줄러 업데이트(ID기반)
     @Override
-    public SchedulerResponseDto updateScheduler(Long id, String title, String contents, String password) {
+    public SchedulerResponseDto updateScheduler(Long id, String title, String contents, String name, String password) {
 
         if (title == null || contents == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타이틀과 컨텐츠의 값이 없습니다.");
@@ -67,7 +69,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         checkingPassword(id, password);
 
-        int updatedRow = schedulerRepository.updateScheduler(id, title, contents);
+        int updatedRow = schedulerRepository.updateScheduler(id, title, contents, name);
 
         if(updatedRow == 0){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다" + id);
@@ -95,15 +97,15 @@ public class SchedulerServiceImpl implements SchedulerService {
     //비밀번호 인증 로직
     @Override
     public void checkingPassword(Long id, String password) {
-        Scheduler scheduler = schedulerRepository.findSchedulerById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "스케줄을 찾을 수 없습니다: " + id));
+        Scheduler scheduler = schedulerRepository.findSchedulerById(id).orElseThrow(() -> new NoSuchElementException("스케줄을 찾을 수 없습니다: " + id));
 
         if(!scheduler.getPassword().equals(password)){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀립니다.");
+            throw new PasswordException("비밀번호가 틀립니다.");
         }
     }
 
     @Override
-    public List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months) {
+    public List<SchedulerResponseDto> searchSchedules(String name, LocalDate date, Integer months, Long userId) {
         LocalDate from = null;
         LocalDate to = LocalDate.now();
 
@@ -113,6 +115,12 @@ public class SchedulerServiceImpl implements SchedulerService {
             from = date;
         }
 
-        return schedulerRepository.searchByConditions(name, from, to);
+        return schedulerRepository.searchByConditions(name, from, to, userId);
+    }
+
+    @Override
+    public List<SchedulerResponseDto> getPaginationSchedules(int page, int size) {
+        int offset = page * size;
+        return schedulerRepository.findPaginationSchedules(offset, size);
     }
 }

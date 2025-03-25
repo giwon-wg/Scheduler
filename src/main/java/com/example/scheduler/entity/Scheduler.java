@@ -18,6 +18,7 @@ public class Scheduler {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
     private String password;
     private String name;
     private Long userId;
@@ -29,6 +30,7 @@ public class Scheduler {
         this.startTime = startTime;
         this.endTime = endTime;
         this.createdAt = LocalDateTime.now();
+        this.updateAt = this.createdAt;
         this.password = password;
         this.name = name;
         this.userId = userId;
@@ -38,7 +40,8 @@ public class Scheduler {
     public void update(String title, String contents){
         this.title = title;
         this.contents = contents;
-        this.createdAt = LocalDateTime.now();
+        this.name = name;
+        this.updateAt = LocalDateTime.now();
     }
 
 }

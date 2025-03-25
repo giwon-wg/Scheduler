@@ -2,7 +2,6 @@ package com.example.scheduler.repository;
 
 import com.example.scheduler.DTO.SchedulerResponseDto;
 import com.example.scheduler.entity.Scheduler;
-import com.example.scheduler.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -38,6 +37,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
         parameters.put("start_time", scheduler.getStartTime());
         parameters.put("end_time", scheduler.getEndTime());
         parameters.put("created_at", scheduler.getCreatedAt());
+        parameters.put("updated_at", scheduler.getUpdateAt());
         parameters.put("password", scheduler.getPassword());
         parameters.put("name", scheduler.getName());
         parameters.put("user_id", scheduler.getUserId());
@@ -51,6 +51,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 scheduler.getStartTime(),
                 scheduler.getEndTime(),
                 scheduler.getCreatedAt(),
+                scheduler.getUpdateAt(),
                 scheduler.getName(),
                 scheduler.getUserId()
         );
@@ -78,9 +79,9 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
     }
 
     @Override
-    public int updateScheduler(Long id, String title, String contents) {
-        String sql = "UPDATE schedules SET title = ?, contents = ?, created_at = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, title, contents, new Date(), id);
+    public int updateScheduler(Long id, String title, String contents, String name) {
+        String sql = "UPDATE schedules SET title = ?, contents = ?, name = ?, updated_at = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, title, contents, name, new Date(), id);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
     }
 
     @Override
-    public List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to) {
+    public List<SchedulerResponseDto> searchByConditions(String name, LocalDate from, LocalDate to, Long userId) {
         StringBuilder sql = new StringBuilder("SELECT * FROM schedules WHERE 1 = 1");
         List<Object> params = new ArrayList<>();
 
@@ -99,15 +100,26 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
             params.add(name);
         }
 
+        if(userId != null){
+            sql.append(" AND user_id = ?");
+            params.add(userId);
+        }
+
         if(from != null && to != null){
             sql.append(" AND DATE(created_at) BETWEEN ? AND ? ");
             params.add(java.sql.Date.valueOf(from));
             params.add(java.sql.Date.valueOf(to));
         }
 
-        sql.append("ORDER BY created_at DESC");
+        sql.append(" ORDER BY created_at DESC");
 
         return jdbcTemplate.query(sql.toString(), params.toArray(), (rs, rowNum) -> mapToResponseDto(rs));
+    }
+
+    @Override
+    public List<SchedulerResponseDto> findPaginationSchedules(int offset, int limit) {
+        String sql = "SELECT * FROM schedules ORDER BY updated_at DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, new Object[]{limit, offset}, (rs, rowNum) -> mapToResponseDto(rs));
     }
 
     // Response DTO 매핑
@@ -119,6 +131,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 rs.getTimestamp("start_time").toLocalDateTime(),
                 rs.getTimestamp("end_time").toLocalDateTime(),
                 rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getTimestamp("updated_at").toLocalDateTime(),
                 rs.getString("name"),
                 rs.getLong("user_id")
         );
@@ -133,6 +146,7 @@ public class JdbcTemplateSchedulerRepository implements SchedulerRepository {
                 rs.getTimestamp("start_time").toLocalDateTime(),
                 rs.getTimestamp("end_time").toLocalDateTime(),
                 rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getTimestamp("updated_at").toLocalDateTime(),
                 rs.getString("password"),
                 rs.getString("name"),
                 rs.getLong("user_id")
