@@ -2,6 +2,7 @@ package com.example.scheduler.controller;
 
 import com.example.scheduler.DTO.UserRequestDto;
 import com.example.scheduler.DTO.UserResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(summary = "유저 등록", description = "유저를 등록합니다.")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody @Valid UserRequestDto dto) {
         UserResponseDto response = userService.registerUser(dto);
         return ResponseEntity.ok(response);

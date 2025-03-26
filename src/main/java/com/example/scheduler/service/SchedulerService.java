@@ -30,4 +30,5 @@ public interface SchedulerService {
 
     //페이지네이션
     List<SchedulerResponseDto> getPaginationSchedules(int page, int size);
+
 }
